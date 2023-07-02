@@ -17,7 +17,5 @@ def create_app(model='base'):
     # 注册蓝图
     from backend.service.manager import manager_bp
     app.register_blueprint(manager_bp)
-    from backend.service import test_bp
-    app.register_blueprint(test_bp)
     return app
 

@@ -3,7 +3,7 @@ from backend.service import db
 
 class Category(db.Model):
     __tablename__ = 'category'
-    category = db.Column(db.Integer, primary_key=True)
+    category = db.Column(db.Integer, primary_key=True, autoincrement=False)
     name = db.Column(db.String(20), nullable=False)
     mark = db.Column(db.String(255), nullable=False)
 
@@ -20,7 +20,7 @@ class Category(db.Model):
 
 class Customer(db.Model):
     __tablename__ = 'customer'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(18), nullable=False)
     address = db.Column(db.String(255), nullable=False)
     phone = db.Column(db.String(20), nullable=False)
@@ -43,7 +43,7 @@ class Customer(db.Model):
 
 class Inrecord(db.Model):
     __tablename__ = 'inrecord'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     category = db.Column(db.Integer, nullable=False)
     pid = db.Column(db.Integer, nullable=False)
     sid = db.Column(db.Integer, nullable=False)
@@ -72,7 +72,7 @@ class Inrecord(db.Model):
 
 class Inventory(db.Model):
     __tablename__ = 'inventory'
-    pid = db.Column(db.Integer, primary_key=True)
+    pid = db.Column(db.Integer, primary_key=True, autoincrement=False)
     sid = db.Column(db.Integer, nullable=False)
     amount = db.Column(db.Integer, nullable=False)
 
@@ -89,7 +89,7 @@ class Inventory(db.Model):
 
 class Manager(db.Model):
     __tablename__ = 'manager'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(18), nullable=False)
     password = db.Column(db.String(18), nullable=False)
 
@@ -109,7 +109,7 @@ class Manager(db.Model):
 
 class Outrecord(db.Model):
     __tablename__ = 'outrecord'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     cid = db.Column(db.Integer, nullable=False)
     pid = db.Column(db.Integer, nullable=False)
     out_time = db.Column(db.DateTime, nullable=False)
@@ -136,7 +136,7 @@ class Outrecord(db.Model):
 
 class Product(db.Model):
     __tablename__ = 'product'
-    pid = db.Column(db.Integer, primary_key=True)
+    pid = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(20), nullable=False)
     category = db.Column(db.Integer, nullable=False)
     mark = db.Column(db.String(255), nullable=False)
@@ -155,7 +155,7 @@ class Product(db.Model):
 
 class Supplier(db.Model):
     __tablename__ = 'supplier'
-    sid = db.Column(db.Integer, primary_key=True)
+    sid = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(20), nullable=False)
     address = db.Column(db.String(255), nullable=False)
     phone = db.Column(db.String(20), nullable=False)
@@ -178,7 +178,7 @@ class Supplier(db.Model):
 
 class Order(db.Model):
     __tablename__ = 'order'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     cid = db.Column(db.Integer, nullable=False)
     pid = db.Column(db.Integer, nullable=False)
     sid = db.Column(db.Integer, nullable=False)
@@ -209,7 +209,7 @@ class Order(db.Model):
 
 class Order_detail(db.Model):
     __tablename__ = 'order_detail'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     cid = db.Column(db.Integer, nullable=False)
     pid = db.Column(db.Integer, nullable=False)
     sid = db.Column(db.Integer, nullable=False)
