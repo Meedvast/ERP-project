@@ -29,3 +29,21 @@ export interface Result {
   name: string;
   password: string;
 }
+
+export interface OrderListResult {
+  list: Array<OrderModel>;
+}
+export interface OrderModel {
+  data: {
+    id: number;
+    cid: number;
+    pid: number;
+    sid: number;
+    price: number;
+    amount: number;
+    money: number;
+    book_time: string;
+    order_time: string;
+    remark: string;
+  };
+}

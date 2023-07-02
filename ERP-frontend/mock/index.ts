@@ -1,4 +1,5 @@
 import Mock from 'mockjs';
+import { Layout } from 'tdesign-vue-next';
 import { MockMethod } from 'vite-plugin-mock';
 
 export default [
@@ -306,6 +307,25 @@ export default [
                     frameSrc: 'https://tdesign.tencent.com/vue-next/getting-started',
                     frameBlank: true,
                     title: 'TDesign 文档（外链）',
+                  },
+                },
+              ],
+            },
+            {
+              path: '/order',
+              component: Layout,
+              name: 'order',
+              meta: {
+                title: '订单',
+                // icon: shallowRef(DashboardIcon),
+              },
+              children: [
+                {
+                  path: 'order',
+                  name: 'DashboardBase',
+                  component: () => import('@/pages/order/index.vue'),
+                  meta: {
+                    title: '订单详情',
                   },
                 },
               ],

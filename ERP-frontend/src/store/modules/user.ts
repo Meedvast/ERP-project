@@ -20,6 +20,7 @@ export const useUserStore = defineStore('user', {
     },
   },
   actions: {
+    // eslint-disable-next-line consistent-return
     async login(userInfo: Record<string, string>) {
       console.log(`用户信息:`, userInfo);
       const { name, password } = userInfo;
@@ -40,11 +41,13 @@ export const useUserStore = defineStore('user', {
           main_: 'main_token',
           dev_: 'dev_token',
         }[password]; */
-      return {
-        code: 200,
-        message: '登陆成功',
-        data: 'main_token',
-      };
+      if (result === 200) {
+        return {
+          code: 200,
+          message: '登陆成功',
+          data: 'main_token',
+        };
+      }
     },
     /*       const res = await mockLogin(userInfo);
       if (res.code === 200) {
@@ -53,7 +56,7 @@ export const useUserStore = defineStore('user', {
         throw res;
       }
     }, */
-    /*     async getUserInfo() {
+    async getUserInfo() {
       const mockRemoteUserInfo = async (token: string) => {
         if (token === 'main_token') {
           return {
@@ -69,7 +72,7 @@ export const useUserStore = defineStore('user', {
       const res = await mockRemoteUserInfo(this.token);
 
       this.userInfo = res;
-    }, */
+    },
     /*     async logout() {
       this.token = '';
       this.userInfo = { ...InitUserInfo };

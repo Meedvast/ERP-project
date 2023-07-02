@@ -1,10 +1,11 @@
-import type { CardListResult, ListResult } from '@/api/model/listModel';
+import type { CardListResult, ListResult, OrderListResult } from '@/api/model/listModel';
 import { request } from '@/utils/request';
 
 const Api = {
   BaseList: '/get-list',
   CardList: '/get-card-list',
-  posturl: 'localhost:5000/api/manager/login/',
+  OrderList: '172.16.1.11:5000/api/order/',
+  posturl: '172.16.1.11:5000/api/manager/login/',
 };
 
 export function getList() {
@@ -26,5 +27,11 @@ export function getUserInfo(account: string, password: string) {
       account,
       password,
     },
+  });
+}
+
+export function getOrderList() {
+  return request.get<OrderListResult>({
+    url: Api.OrderList,
   });
 }
