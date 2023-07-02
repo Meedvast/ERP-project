@@ -90,16 +90,16 @@ class Inventory(db.Model):
 class Manager(db.Model):
     __tablename__ = 'manager'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(18), nullable=False)
+    account = db.Column(db.String(18), nullable=False)
     password = db.Column(db.String(18), nullable=False)
 
     def __repr__(self):
-        return '<manager %r>' % self.name
+        return '<manager %r>' % self.account
 
     def to_dict(self):
         return {
             'id': self.id,
-            'name': self.name,
+            'name': self.account,
             'password': self.password
         }
 

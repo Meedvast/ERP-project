@@ -10,9 +10,9 @@ class OrderView(Resource):
     # 获取订单信息，当没有参数传入时获取全部订单，当有订单id传入时获取该订单信息
     def get(self, msg=None):
         try:
-            oid = request.args.get('oid')
-            if oid:
-                order = Order.query.filter_by(oid=oid).first()
+            id = request.args.get('id')
+            if id:
+                order = Order.query.filter_by(id=id).first()
                 if order:
                     return to_dict_msg(200, data=order.to_dict())
                 else:
@@ -93,3 +93,4 @@ class OrderView(Resource):
                 return to_dict_msg(500, msg="数据库错误")
         else:
             return to_dict_msg(400, msg='订单不存在')
+

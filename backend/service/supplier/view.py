@@ -57,7 +57,7 @@ class SupplierView(Resource):
         supplier = Supplier.query.filter_by(sid=sid).first()
         if supplier:
             try:
-                supplier.name = name
+                supplier.account = name
                 supplier.address = address
                 supplier.phone = phone
                 supplier.email = email
