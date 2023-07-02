@@ -138,8 +138,10 @@ class Product(db.Model):
     __tablename__ = 'product'
     pid = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(20), nullable=False)
+    type = db.Column(db.String(20), nullable=False)
+    unit = db.Column(db.String(20), nullable=False)
+    sid = db.Column(db.Integer, nullable=False)
     category = db.Column(db.Integer, nullable=False)
-    mark = db.Column(db.String(255), nullable=False)
 
     def __repr__(self):
         return '<product %r>' % self.name
@@ -148,8 +150,10 @@ class Product(db.Model):
         return {
             'pid': self.pid,
             'name': self.name,
-            'category': self.category,
-            'mark': self.mark
+            'type': self.type,
+            'unit': self.unit,
+            'sid': self.sid,
+            'category': self.category
         }
 
 
