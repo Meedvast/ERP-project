@@ -1,11 +1,13 @@
-import type { CardListResult, ListResult, OrderListResult } from '@/api/model/listModel';
-import { request } from '@/utils/request';
+import axios from 'axios';
 
+import type { CardListResult, ListResult, OrderListResult } from '@/api/model/listModel';
+
+import { request } from '@/utils/request';
 const Api = {
   BaseList: '/get-list',
   CardList: '/get-card-list',
-  OrderList: '172.16.1.11:5000/api/order/',
-  posturl: '172.16.1.11:5000/api/manager/login/',
+  OrderList: 'http://10.254.5.48:5000/api/order/',
+  posturl: 'http://10.254.5.48:5000/api/manager/login/',
 };
 
 export function getList() {
@@ -21,17 +23,31 @@ export function getCardList() {
 }
 
 export function getUserInfo(account: string, password: string) {
-  return request.post({
+  axios({
+    method: 'post',
     url: Api.posturl,
-    data: {
+    params: {
       account,
       password,
     },
+  }).then((res) => {
+    console.log(res.data.status);
+    return res.data.status;
   });
 }
 
-export function getOrderList() {
-  return request.get<OrderListResult>({
+export async function getOrderList() {
+  /* return request.get<OrderListResult>({
     url: Api.OrderList,
+  }); */
+
+  const response = await axios({
+    method: 'get',
+    url: Api.OrderList,
+  }).then((res) => {
+    // eslint-disable-next-line no-sequences
+    return res.data.data;
   });
+  console.log(response);
+  return response;
 }
