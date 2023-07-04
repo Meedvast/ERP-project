@@ -94,6 +94,7 @@
         </template>
         <template #op="slotProps">
           <a class="t-button-link" @click="rehandleClickOp(slotProps)">管理</a>
+          <a class="t-button-link" @click="modify(slotProps)">修改</a>
           <a class="t-button-link" @click="handleClickDelete(slotProps)">删除</a>
         </template>
       </t-table>
@@ -104,14 +105,34 @@
         :on-cancel="onCancel"
         @confirm="onConfirmDelete"
       />
+
+      <t-dialog v-model:visible="visible" header="基本信息" @confirm="onConfirm">
+      <template #body>
+        <div class="dialog-info-block">
+          <div class="dialog-info-block">
+            <div v-for="(item, index) in BASE_INFO_DATA" :key="index" class="info-item">
+              <h1>{{ item.name }}</h1>
+              <span
+                :class="{
+                  ['green']: item.type && item.type.value === 'green',
+                  ['blue']: item.type && item.type.value === 'blue',
+                }"
+                >{{ item.value }}</span
+              >
+            </div>
+          </div>
+        </div>
+      </template>
+    </t-dialog>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { MessagePlugin, PageInfo, PrimaryTableCol, TableRowData } from 'tdesign-vue-next';
 import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-import { getOrderList } from '@/api/list';
+import { getList, getOrderList } from '@/api/list';
 import Trend from '@/components/trend/index.vue';
 import { prefix } from '@/config/global';
 import {
@@ -123,41 +144,122 @@ import {
 } from '@/constants';
 import { useSettingStore } from '@/store';
 
+const BASE_INFO_DATA = ref([
+  {
+    name: '订单编号',
+    value: 1,
+    type: null,
+  },
+  {
+    name: '客户编号',
+    value: 1,
+    type: {
+      key: 'contractStatus',
+      value: 'inProgress',
+    },
+  },
+  {
+    name: '产品编号',
+    value: '1',
+    type: null,
+  },
+  {
+    name: '供应商编号',
+    value: '1',
+    type: null,
+  },
+  {
+    name: '销售单价',
+    value: '10000',
+    type: null,
+  },
+  {
+    name: '订购数量',
+    value: '100',
+    type: null,
+  },
+  {
+    name: '订单金额',
+    value: '100000',
+    type: null,
+  },
+  {
+    name: '预定时间',
+    value: '欧尚',
+    type: null,
+  },
+  {
+    name: '订单时间',
+    value: '2020-12-20',
+    type: null,
+  },
+  {
+    name: '备注',
+    value: '2021-01-20',
+    type: null,
+  },
+]);
+
 const store = useSettingStore();
+const router = useRouter();
 
 const COLUMNS: PrimaryTableCol[] = [
   {
-    title: '合同名称',
+    title: '订单编号',
     fixed: 'left',
     width: 280,
     ellipsis: true,
     align: 'left',
-    colKey: 'name',
+    colKey: 'id',
   },
-  { title: '合同状态', colKey: 'status', width: 160 },
+  { title: '客户编号', colKey: 'cid', width: 160 },
   {
-    title: '合同编号',
+    title: '产品编号',
     width: 160,
     ellipsis: true,
-    colKey: 'no',
+    colKey: 'pid',
   },
   {
-    title: '合同类型',
+    title: '供应商编号',
     width: 160,
     ellipsis: true,
-    colKey: 'contractType',
+    colKey: 'sid',
   },
   {
-    title: '合同收付类型',
+    title: '销售单价',
     width: 160,
     ellipsis: true,
-    colKey: 'paymentType',
+    colKey: 'price',
   },
   {
-    title: '合同金额 (元)',
+    title: '订购数量',
     width: 160,
     ellipsis: true,
     colKey: 'amount',
+  },
+  {
+    title: '订单金额',
+    width: 160,
+    ellipsis: true,
+    colKey: 'money',
+  },
+  {
+    title: '预定时间',
+    width: 160,
+    ellipsis: true,
+    colKey: 'book_time',
+  },
+  {
+    title: '订单时间',
+    width: 160,
+    ellipsis: true,
+    colKey: 'order_time',
+  },
+  {
+    title: '备注',
+    width: 160,
+    ellipsis: true,
+    colKey: 'remark',
   },
   {
     align: 'left',
@@ -186,6 +288,7 @@ const pagination = ref({
   defaultCurrent: 1,
 });
 const confirmVisible = ref(false);
+const visible = ref(false);
 
 const data = ref([]);
 
@@ -193,9 +296,11 @@ const dataLoading = ref(false);
 const fetchData = async () => {
   dataLoading.value = true;
   try {
-    const { list } = await getOrderList();
+    const list = await getOrderList();
+    // const { list } = await getList();
     console.log(list);
     data.value = list;
+    console.log(data.value);
     pagination.value = {
       ...pagination.value,
       total: list.length,
@@ -229,6 +334,15 @@ const onConfirmDelete = () => {
   resetIdx();
 };
 
+const onConfirm = () => {
+  visible.value = false;
+};
+
+const modify = (ctx: unknown) => {
+  console.log(ctx.row);
+  router.push({ path: '/form/base', params: { info: ctx.row } });
+};
+
 const onCancel = () => {
   resetIdx();
 };
@@ -254,7 +368,63 @@ const rehandleChange = (changeParams: unknown, triggerAndData: unknown) => {
   console.log('统一Change', changeParams, triggerAndData);
 };
 const rehandleClickOp = (ctx: unknown) => {
-  console.log(ctx);
+  visible.value = true;
+  console.log(BASE_INFO_DATA.value);
+  BASE_INFO_DATA.value = ctx.row;
+  console.log(BASE_INFO_DATA.value);
+  console.log(ctx.row.amount);
+  BASE_INFO_DATA.value = [
+    {
+      name: '订单编号',
+      value: ctx.row.id,
+      type: null,
+    },
+    {
+      name: '客户编号',
+      value: ctx.row.cid,
+      type: null,
+    },
+    {
+      name: '产品编号',
+      value: ctx.row.pid,
+      type: null,
+    },
+    {
+      name: '供应商编号',
+      value: ctx.row.sid,
+      type: null,
+    },
+    {
+      name: '销售单价',
+      value: ctx.row.price,
+      type: null,
+    },
+    {
+      name: '订购数量',
+      value: ctx.row.amount,
+      type: null,
+    },
+    {
+      name: '订单金额',
+      value: ctx.row.money,
+      type: null,
+    },
+    {
+      name: '预定时间',
+      value: ctx.row.book_time,
+      type: null,
+    },
+    {
+      name: '订单时间',
+      value: ctx.row.order_time,
+      type: null,
+    },
+    {
+      name: '备注',
+      value: ctx.row.remark,
+      type: null,
+    },
+  ];
 };
 
 const headerAffixedTop = computed(

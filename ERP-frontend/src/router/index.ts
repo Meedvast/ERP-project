@@ -20,6 +20,11 @@ const defaultRouterList: Array<RouteRecordRaw> = [
     path: '/',
     redirect: '/dashboard/base',
   },
+  {
+    path: '/form/base',
+    name: 'modify',
+    component: () => import('@/pages/form/base/index.vue'),
+  },
 ];
 // 存放固定路由
 export const homepageRouterList: Array<RouteRecordRaw> = mapModuleRouterList(homepageModules);

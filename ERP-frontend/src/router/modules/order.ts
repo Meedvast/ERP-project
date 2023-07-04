@@ -5,6 +5,7 @@ export default [
     path: '/order',
     component: Layout,
     name: 'order',
+    redirect: '/order/index.vue',
     meta: {
       title: '订单',
       // icon: shallowRef(DashboardIcon),

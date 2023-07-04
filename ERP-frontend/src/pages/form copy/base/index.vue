@@ -167,15 +167,10 @@ export default {
 import type { SubmitContext, UploadFailContext, UploadFile } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { ref } from 'vue';
-import { useRoute } from 'vue-router';
 
 import { FORM_RULES, INITIAL_DATA, PARTY_A_OPTIONS, PARTY_B_OPTIONS, TYPE_OPTIONS } from './constants';
 
 const formData = ref({ ...INITIAL_DATA });
-const route = useRoute();
-
-const data = route.params.info;
-console.log(route.params);
 
 const onReset = () => {
   MessagePlugin.warning('取消新建');

@@ -23,8 +23,8 @@ export const useUserStore = defineStore('user', {
     // eslint-disable-next-line consistent-return
     async login(userInfo: Record<string, string>) {
       console.log(`用户信息:`, userInfo);
-      const { name, password } = userInfo;
-      const result = await getUserInfo(name, password);
+      const { account, password } = userInfo;
+      const result = await getUserInfo(account, password);
       if (result === 400) {
         return {
           code: 400,
