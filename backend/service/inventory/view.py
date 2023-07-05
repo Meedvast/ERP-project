@@ -26,9 +26,9 @@ class InventoryView(Resource):
 
     # 添加库存
     def post(self):
-        pid = request.json.get('pid')
-        sid = request.json.get('sid')
-        amount = request.json.get('amount')
+        pid = request.form.get('pid')
+        sid = request.form.get('sid')
+        amount = request.form.get('amount')
         if not all([pid, sid, amount]):
             return to_dict_msg(400, msg='请输入完整信息')
         if Inventory.query.filter(Inventory.pid == pid, Inventory.sid == sid, Inventory.amount == amount).all():
@@ -44,9 +44,9 @@ class InventoryView(Resource):
 
     # 修改库存
     def put(self):
-        pid = request.json.get('pid')
-        sid = request.json.get('sid')
-        amount = request.json.get('amount')
+        pid = request.form.get('pid')
+        sid = request.form.get('sid')
+        amount = request.form.get('amount')
         if not all([pid, sid, amount]):
             return to_dict_msg(400, msg='请输入完整信息')
         inventory = Inventory.query.filter_by(pid=pid).first()
@@ -64,7 +64,7 @@ class InventoryView(Resource):
 
     # 删除库存
     def delete(self):
-        pid = request.json.get('pid')
+        pid = request.args.get('pid')
         inventory = Inventory.query.filter_by(pid=pid).first()
         if inventory:
             try:
@@ -75,3 +75,7 @@ class InventoryView(Resource):
                 return to_dict_msg(500, msg="数据库错误")
         else:
             return to_dict_msg(400, msg='库存不存在')
+
+
+inventory_api = Api(inventory_bp)
+inventory_api.add_resource(InventoryView, '/', endpoint='inventory')

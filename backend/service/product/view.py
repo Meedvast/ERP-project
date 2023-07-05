@@ -26,12 +26,12 @@ class ProductView(Resource):
 
     # 添加产品
     def post(self):
-        pid = request.json.get('pid')
-        name = request.json.get('name')
-        type = request.json.get('type')
-        unit = request.json.get('unit')
-        sid = request.json.get('sid')
-        category = request.json.get('category')
+        pid = request.form.get('pid')
+        name = request.form.get('name')
+        type = request.form.get('type')
+        unit = request.form.get('unit')
+        sid = request.form.get('sid')
+        category = request.form.get('category')
         if not all([pid, name, type, unit, sid, category]):
             return to_dict_msg(400, msg='请输入完整信息')
         if Product.query.filter(Product.pid == pid, Product.name == name, Product.type == type, ).all():
@@ -47,12 +47,12 @@ class ProductView(Resource):
 
     # 修改订单
     def put(self):
-        pid = request.json.get('pid')
-        name = request.json.get('name')
-        type = request.json.get('type')
-        unit = request.json.get('unit')
-        sid = request.json.get('sid')
-        category = request.json.get('category')
+        pid = request.form.get('pid')
+        name = request.form.get('name')
+        type = request.form.get('type')
+        unit = request.form.get('unit')
+        sid = request.form.get('sid')
+        category = request.form.get('category')
         if not all([pid, name, type, unit, sid, category]):
             return to_dict_msg(400, msg='请输入完整信息')
         product = Product.query.filter_by(pid=pid).first()
@@ -73,7 +73,7 @@ class ProductView(Resource):
 
     # 删除产品
     def delete(self):
-        pid = request.json.get('pid')
+        pid = request.args.get('pid')
         product = Product.query.filter_by(pid=pid).first()
         if product:
             try:
@@ -84,3 +84,7 @@ class ProductView(Resource):
                 return to_dict_msg(500, msg="数据库错误")
         else:
             return to_dict_msg(400, msg='产品不存在')
+
+
+product_api = Api(product_bp)
+product_api.add_resource(ProductView, '/', endpoint='product')

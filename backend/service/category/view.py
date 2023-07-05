@@ -26,9 +26,9 @@ class CategoryView(Resource):
 
     # 添加业务类别
     def post(self):
-        category = request.json.get('category')
-        name = request.json.get('name')
-        mark = request.json.get('mark')
+        category = request.form.get('category')
+        name = request.form.get('name')
+        mark = request.form.get('mark')
         if not all([category, name, mark]):
             return to_dict_msg(400, msg='请输入完整信息')
         if Category.query.filter(Category.category == category, Category.name == name, Category.mark == mark).all():
@@ -44,9 +44,9 @@ class CategoryView(Resource):
 
     # 修改业务类别
     def put(self):
-        category = request.json.get('category')
-        name = request.json.get('name')
-        mark = request.json.get('mark')
+        category = request.form.get('category')
+        name = request.form.get('name')
+        mark = request.form.get('mark')
         if not all([category, name, mark]):
             return to_dict_msg(400, msg='请输入完整信息')
         category = Category.query.filter_by(category=category).first()
@@ -64,7 +64,7 @@ class CategoryView(Resource):
 
     # 删除业务类别
     def delete(self):
-        category = request.json.get('category')
+        category = request.args.get('category')
         category = Category.query.filter_by(category=category).first()
         if category:
             try:
@@ -75,3 +75,7 @@ class CategoryView(Resource):
                 return to_dict_msg(500, msg="数据库错误")
         else:
             return to_dict_msg(400, msg='业务类别不存在')
+
+
+category_api = Api(category_bp)
+category_api.add_resource(CategoryView, '/', endpoint='category')

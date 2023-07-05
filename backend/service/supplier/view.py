@@ -12,12 +12,18 @@ class SupplierView(Resource):
     def get(self, msg=None):
         try:
             sid = request.args.get('sid')
-            if sid:
-                supplier = Supplier.query.filter_by(sid=sid).first()
+            cname = request.args.get('cname')
+            filterlist = []
+            if sid != '' and sid is not None:
+                filterlist.append(Supplier.sid == sid)
+            if cname != '' and cname is not None:
+                filterlist.append(Supplier.cname == cname)
+            if filterlist:
+                supplier = Supplier.query.filter(*filterlist).first()
                 if supplier:
-                    return to_dict_msg(200, data=supplier.to_dict())
+                    return to_dict_msg(200, data=[supplier.to_dict() for supplier in supplier])
                 else:
-                    return to_dict_msg(200, msg='供应商不存在')
+                    return to_dict_msg(200, data=None, msg='供应商不存在')
             else:
                 suppliers = Supplier.query.all()
                 return to_dict_msg(200, data=[supplier.to_dict() for supplier in suppliers])
@@ -26,18 +32,20 @@ class SupplierView(Resource):
 
     # 添加供应商
     def post(self):
-        name = request.json.get('name')
-        address = request.json.get('address')
-        phone = request.json.get('phone')
-        email = request.json.get('email')
-        remark = request.json.get('remark')
-        if not all([name, address, phone, email, remark]):
+        sname = request.form.get('sname')
+        cname = request.form.get('cname')
+        cjob = request.form.get('cjob')
+        address = request.form.get('address')
+        phone = request.form.get('phone')
+        email = request.form.get('email')
+        remark = request.form.get('remark')
+        if not all([sname, cname, cjob, address, phone, email, remark]):
             return to_dict_msg(400, msg='请输入供应商信息')
-        if Supplier.query.filter(Supplier.name == name).all():
+        if Supplier.query.filter(Supplier.sname == sname).all():
             return to_dict_msg(400, msg='供应商已存在')
         else:
             try:
-                supplier = Supplier(name=name, address=address, phone=phone, email=email, remark=remark)
+                supplier = Supplier(sname=sname, cname=cname, address=address, cjob=cjob, phone=phone, email=email, remark=remark)
                 db.session.add(supplier)
                 db.session.commit()
                 return to_dict_msg(200, msg='添加成功')
@@ -46,18 +54,22 @@ class SupplierView(Resource):
 
     # 修改供应商信息
     def put(self):
-        sid = request.json.get('sid')
-        name = request.json.get('name')
-        address = request.json.get('address')
-        phone = request.json.get('phone')
-        email = request.json.get('email')
-        remark = request.json.get('remark')
-        if not all([name, address, phone, email, remark]):
+        sid = request.form.get('sid')
+        sname = request.form.get('sname')
+        cname = request.form.get('cname')
+        cjob = request.form.get('cjob')
+        address = request.form.get('address')
+        phone = request.form.get('phone')
+        email = request.form.get('email')
+        remark = request.form.get('remark')
+        if not all([sname, cname, cjob, address, phone, email, remark]):
             return to_dict_msg(400, msg='请输入供应商信息')
         supplier = Supplier.query.filter_by(sid=sid).first()
         if supplier:
             try:
-                supplier.account = name
+                supplier.sname = sname
+                supplier.cname = cname
+                supplier.cjob = cjob
                 supplier.address = address
                 supplier.phone = phone
                 supplier.email = email
@@ -71,7 +83,7 @@ class SupplierView(Resource):
 
     # 删除供应商
     def delete(self):
-        sid = request.json.get('sid')
+        sid = request.args.get('sid')
         supplier = Supplier.query.filter_by(sid=sid).first()
         if supplier:
             try:
@@ -85,4 +97,4 @@ class SupplierView(Resource):
 
 
 supplier_api = Api(supplier_bp)
-supplier_api.add_resource(SupplierView, '/supplier/', endpoint='supplier')
+supplier_api.add_resource(SupplierView, '/', endpoint='supplier')

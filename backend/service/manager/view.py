@@ -11,7 +11,7 @@ class LoginView(Resource):
     def get(self, msg=None):
         try:
             account = request.args.get('account')
-            manager = Manager.query.filter_by(name=account).first()
+            manager = Manager.query.filter_by(account=account).first()
             if manager:
                 return to_dict_msg(200, data=account)
             else:
@@ -20,11 +20,11 @@ class LoginView(Resource):
             return to_dict_msg(500, msg=str(e))
 
     def post(self):
-        account = request.form.get('account')
-        password = request.form.get('password')
+        account = request.args.get('account')
+        password = request.args.get('password')
         if not all([account, password]):
             return to_dict_msg(400, msg='请输入用户名或密码')
-        manager = Manager.query.filter_by(name=account).first()
+        manager = Manager.query.filter_by(account=account).first()
         if manager:
             if manager.check_password(password):
                 return to_dict_msg(200, msg='登录成功')
@@ -47,7 +47,7 @@ class RegisterView(Resource):
             return to_dict_msg(400, msg='两次密码不一致')
         else:
             try:
-                manager = Manager(name=account, password=pwd1)
+                manager = Manager(account=account, password=pwd1)
                 db.session.add(manager)
                 db.session.commit()
                 return to_dict_msg(200, msg='注册成功')
@@ -57,7 +57,7 @@ class RegisterView(Resource):
     def put(self):
         try:
             account = request.json.get('account')
-            manager = Manager.query.filter_by(name=account).first()
+            manager = Manager.query.filter_by(account=account).first()
             if manager:
                 manager.password = request.json.get('password')
                 db.session.commit()

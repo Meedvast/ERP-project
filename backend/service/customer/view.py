@@ -4,7 +4,7 @@ from backend.service import db
 from flask_restful import Resource, Api
 from backend.service.utils.message import to_dict_msg
 
-from backend.service.order import customer_bp
+from backend.service.customer import customer_bp
 
 
 class CustomerView(Resource):
@@ -26,12 +26,12 @@ class CustomerView(Resource):
 
     # 添加客户
     def post(self):
-        id = request.json.get('id')
-        name = request.json.get('name')
-        address = request.json.get('address')
-        phone = request.json.get('phone')
-        email = request.json.get('email')
-        remark = request.json.get('remark')
+        id = request.form.get('id')
+        name = request.form.get('name')
+        address = request.form.get('address')
+        phone = request.form.get('phone')
+        email = request.form.get('email')
+        remark = request.form.get('remark')
         if not all([id, name, address, phone, email, remark]):
             return to_dict_msg(400, msg='请输入完整信息')
         if Customer.query.filter(Customer.id == id, Customer.name == name, Customer.address == address,
@@ -48,12 +48,12 @@ class CustomerView(Resource):
 
     # 修改客户信息
     def put(self):
-        id = request.json.get('id')
-        name = request.json.get('name')
-        address = request.json.get('address')
-        phone = request.json.get('phone')
-        email = request.json.get('email')
-        remark = request.json.get('remark')
+        id = request.form.get('id')
+        name = request.form.get('name')
+        address = request.form.get('address')
+        phone = request.form.get('phone')
+        email = request.form.get('email')
+        remark = request.form.get('remark')
         if not all([id, name, address, phone, email, remark]):
             return to_dict_msg(400, msg='请输入完整信息')
         customer = Customer.query.filter_by(id=id).first()
@@ -74,7 +74,7 @@ class CustomerView(Resource):
 
     # 删除客户信息
     def delete(self):
-        id = request.json.get('id')
+        id = request.args.get('id')
         customer = Customer.query.filter_by(id=id).first()
         if customer:
             try:
@@ -85,3 +85,7 @@ class CustomerView(Resource):
                 return to_dict_msg(500, msg="数据库错误")
         else:
             return to_dict_msg(400, msg='客户不存在')
+
+
+customer_api = Api(customer_bp)
+customer_api.add_resource(CustomerView, '/', endpoint='customer')

@@ -5,7 +5,7 @@ class Category(db.Model):
     __tablename__ = 'category'
     category = db.Column(db.Integer, primary_key=True, autoincrement=False)
     name = db.Column(db.String(20), nullable=False)
-    mark = db.Column(db.String(255), nullable=False)
+    mark = db.Column(db.Boolean, nullable=False)
 
     def __repr__(self):
         return '<category %r>' % self.name
@@ -47,10 +47,10 @@ class Inrecord(db.Model):
     category = db.Column(db.Integer, nullable=False)
     pid = db.Column(db.Integer, nullable=False)
     sid = db.Column(db.Integer, nullable=False)
-    in_time = db.Column(db.DateTime, nullable=False)
-    price = db.Column(db.DECIMAL(10, 2), nullable=False)
+    in_time = db.Column(db.String(12), nullable=False)
+    price = db.Column(db.Float, nullable=False)
     amount = db.Column(db.Integer, nullable=False)
-    money = db.Column(db.DECIMAL(10, 2), nullable=False)
+    money = db.Column(db.Float, nullable=False)
     person = db.Column(db.String(18), nullable=False)
 
     def __repr__(self):
@@ -110,12 +110,13 @@ class Manager(db.Model):
 class Outrecord(db.Model):
     __tablename__ = 'outrecord'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    cid = db.Column(db.Integer, nullable=False)
+    type = db.Column(db.Integer, nullable=False)
+    sid = db.Column(db.Integer, nullable=False)
     pid = db.Column(db.Integer, nullable=False)
-    out_time = db.Column(db.DateTime, nullable=False)
-    price = db.Column(db.DECIMAL(10, 2), nullable=False)
+    out_time = db.Column(db.String(12), nullable=False)
+    price = db.Column(db.Float, nullable=False)
     amount = db.Column(db.Integer, nullable=False)
-    money = db.Column(db.DECIMAL(10, 2), nullable=False)
+    money = db.Column(db.Float, nullable=False)
     person = db.Column(db.String(18), nullable=False)
 
     def __repr__(self):
@@ -124,7 +125,8 @@ class Outrecord(db.Model):
     def to_dict(self):
         return {
             'id': self.id,
-            'cid': self.cid,
+            'type': self.type,
+            'sid': self.sid,
             'pid': self.pid,
             'out_time': self.out_time,
             'price': self.price,
@@ -141,7 +143,7 @@ class Product(db.Model):
     type = db.Column(db.String(20), nullable=False)
     unit = db.Column(db.String(20), nullable=False)
     sid = db.Column(db.Integer, nullable=False)
-    category = db.Column(db.Integer, nullable=False)
+    category = db.Column(db.String(18), nullable=False)
 
     def __repr__(self):
         return '<product %r>' % self.name
@@ -160,19 +162,23 @@ class Product(db.Model):
 class Supplier(db.Model):
     __tablename__ = 'supplier'
     sid = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(20), nullable=False)
+    sname = db.Column(db.String(20), nullable=False)
+    cname = db.Column(db.String(20), nullable=False)
+    cjob = db.Column(db.String(20), nullable=False)
     address = db.Column(db.String(255), nullable=False)
     phone = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(40), nullable=False)
     remark = db.Column(db.String(255), nullable=False)
 
     def __repr__(self):
-        return '<supplier %r>' % self.name
+        return '<supplier %r>' % self.sname
 
     def to_dict(self):
         return {
             'sid': self.sid,
-            'name': self.name,
+            'sname': self.sname,
+            'cname': self.cname,
+            'cjob': self.cjob,
             'address': self.address,
             'phone': self.phone,
             'email': self.email,
@@ -188,10 +194,10 @@ class Order(db.Model):
     sid = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
     amount = db.Column(db.Integer, nullable=False)
-    money = db.Column(db.DECIMAL(10, 2), nullable=False)
-    book_time = db.Column(db.DateTime, nullable=False)
-    order_time = db.Column(db.DateTime, nullable=False)
-    remark = db.Column(db.String(20), nullable=False)
+    money = db.Column(db.Float, nullable=False)
+    book_time = db.Column(db.String(12), nullable=False)
+    order_time = db.Column(db.String(12), nullable=False)
+    remark = db.Column(db.String(20), nullable=True)
 
     def __repr__(self):
         return '<order %r>' % self.id
@@ -217,16 +223,16 @@ class Order_detail(db.Model):
     cid = db.Column(db.Integer, nullable=False)
     pid = db.Column(db.Integer, nullable=False)
     sid = db.Column(db.Integer, nullable=False)
-    book_time = db.Column(db.DateTime, nullable=False)
-    order_time = db.Column(db.DateTime, nullable=False)
-    price = db.Column(db.DECIMAL(10, 2), nullable=False)
+    book_time = db.Column(db.String(12), nullable=False)
+    order_time = db.Column(db.String(12), nullable=False)
+    price = db.Column(db.Float, nullable=False)
     amount = db.Column(db.Integer, nullable=False)
-    money = db.Column(db.DECIMAL(10, 2), nullable=False)
-    method = db.Column(db.String(8), nullable=False)
-    pay_time = db.Column(db.DateTime, nullable=False)
+    money = db.Column(db.Float, nullable=False)
+    method = db.Column(db.Integer, nullable=False)
+    pay_time = db.Column(db.String(12), nullable=False)
     address = db.Column(db.String(255), nullable=False)
     person = db.Column(db.String(18), nullable=False)
-    state = db.Column(db.String(40), nullable=False)
+    state = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
         return '<order_detail %r>' % self.id
